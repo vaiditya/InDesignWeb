@@ -1,0 +1,45 @@
+h1, p {
+  font-family: Lato;
+}
+
+body {
+  background: #585858;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.pageOdd {
+  background: #FFF;
+  z-index: 1;
+  box-shadow: 0px 0px 0.1px #222;
+}
+.pageEven {
+  background: #FFF;
+  box-shadow: 0px 0px 0.1px #222;
+}
+
+.spread {
+  position: relative;
+  border: 1px solid #767272;
+  background: #5e5e5e;
+  margin: 30px;
+}
+
+.page {
+  -moz-box-shadow: inset 0px 0px 0px 0.1px purple;
+  -webkit-box-shadow: inset 0px 0px 0px 0.1px purple;
+  box-shadow: inset 0px 0px 0px 0.1px purple;
+}
+
+.editable {
+  outline: 0;
+  position: absolute ;
+  display: block;
+  word-wrap: break-word;
+  white-space: normal;
+}
