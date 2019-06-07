@@ -168,7 +168,7 @@ export default class ContentEditable extends Component {
       let i=0;
       let spaceFound = false;
       while (i<4 && !spaceFound){
-        console.log(currentPageEl,nextEditableEl)
+        console.log(currentPageEl,nextEditableEl)//page elements is changing on overflow when entered from between
         console.log("while",i)
       const currentPageElHeight = currentPageEl.clientHeight
 
