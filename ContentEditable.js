@@ -82,10 +82,23 @@ export default class ContentEditable extends Component {
 
  
   emitKeyup = (e) => {
-    const currentPageEl = this.getEl();
+    
+   
+
+    let currentEditableElId=`editable_${this.props.page.id}`;
+    let nextEditableElId=`editable_${this.props.page.next_page}`;
+    let currentPageEl=this.getEl();
+   
+    let nextEditableEl = document.getElementById(nextEditableElId)
+    
+    
+    
+      // console.log(nextEditableEl)
+      // console.log(nextEditableEl.clientHeight)
     if (!currentPageEl) return;
 
     const selection = window.getSelection();
+    
     if(selection.anchorNode.offsetTop === undefined) {
       this.currentCaretPosition = selection.anchorNode.parentNode ? selection.anchorNode.parentNode.offsetTop + selection.anchorNode.parentNode.offsetHeight: 0
     } else {
@@ -138,7 +151,7 @@ export default class ContentEditable extends Component {
       }
     }
 
-    //Restrict enter key stroke at the endline of last page
+    // Restrict enter key stroke at the endline of last page
     if (this.props.page.next_page===null && e.keyCode === 13 ){
       const currentEditableEl = document.getElementById(`editable_${this.props.page.id}`)
       const currentPageElHeight = currentPageEl.clientHeight
@@ -149,28 +162,42 @@ export default class ContentEditable extends Component {
          e.preventDefault();
        }
     }
+
     
-    if(this.currentCaretPosition !== this.previousCaretPosition) {
+    if(this.currentCaretPosition !== this.previousCaretPosition ) {
+      let i=0;
+      let spaceFound = false;
+      while (i<4 && !spaceFound){
+        console.log(currentPageEl,nextEditableEl)
+        console.log("while",i)
       const currentPageElHeight = currentPageEl.clientHeight
 
       // Current Editable reference
-      const currentEditableEl = document.getElementById(`editable_${this.props.page.id}`)
+      const currentEditableEl = document.getElementById(currentEditableElId)
       let currentEditableElHeight = currentPageEl.lastChild ? currentPageEl.lastChild.offsetHeight + currentPageEl.lastChild.offsetTop: 0
       
-      if(this.props.page.next_page!==null){
+      // if(this.props.page.next_page!==null){
         // Next Editable reference
-        const nextEditableEl = document.getElementById(`editable_${this.props.page.next_page}`)
+        // const nextEditableEl = document.getElementById(nextEditableElId)
         const nextEditableElHeight = nextEditableEl.clientHeight
+        
         
         let currentPageItem = []
         let nextPageItem = []
 
+
         if(currentEditableElHeight > currentPageElHeight) {
+          // while(i<10  && !spaceFound){
+      
+          
           let currentEditableElLastChild = currentEditableEl.lastChild
           let nextEditableElfirstChild = nextEditableEl.firstChild
+          
 
           if(this.currentCaretPosition > currentPageElHeight) {
+            
             if(currentEditableElLastChild.offsetHeight + currentEditableElLastChild.offsetTop > currentPageElHeight && currentEditableElLastChild.offsetTop < currentPageElHeight) {
+              
               const currentPageItem = currentEditableElLastChild.innerHTML.split(" ")
               const lastEditableModifiedText = currentPageItem.pop()
               nextPageItem.unshift(lastEditableModifiedText)
@@ -191,27 +218,75 @@ export default class ContentEditable extends Component {
                 nextEditableEl.insertBefore(div, nextEditableElfirstChild)
                 nextEditableEl.removeChild(nextEditableElfirstChild)
               }
-
+              
               return this.moveFocus(textNode, nextPageText.length)
             }
 
             if(nextEditableElfirstChild.innerHTML === "<br>" && nextEditableEl.childElementCount === 1) {
               nextEditableEl.replaceChild(currentEditableElLastChild, nextEditableElfirstChild)
-              nextEditableEl.focus()
+              // console.log("asda",nextEditableEl.lastChild.offsetTop)
+              
             } else {
               nextEditableEl.insertBefore(currentEditableElLastChild, nextEditableElfirstChild)
-              nextEditableEl.focus()
+              // console.log("asdaqswdawd",nextEditableEl.lastChild.offsetTop+nextEditableEl.lastChild.clientHeight)
+              
+              //pipeline logic
+              
+              if(nextEditableEl.lastElementChild.offsetTop+nextEditableEl.lastElementChild.clientHeight > nextEditableEl.clientHeight){
+               console.log("entered from end,space not found")
+               console.log("pipeline logic,when moved from end")
+              }else{
+               //break loop
+               spaceFound=true
+              }
+              
             } 
+           nextEditableEl.focus()
 
           } else {
             console.log("Move content to the next page")
             nextEditableEl.insertBefore(currentEditableElLastChild, nextEditableElfirstChild)
+            //pipeline logic
+             console.log("Move",nextEditableEl.lastElementChild.offsetTop+nextEditableEl.lastElementChild.clientHeight > nextEditableEl.clientHeight )
+            //  console.log("pipeline logic")
+             if(nextEditableEl.lastElementChild.offsetTop+nextEditableEl.lastElementChild.clientHeight > nextEditableEl.clientHeight){
+               console.log("pipeline logic when moved from between")
+               console.log("entered from between,space not found")
+               currentPageEl=document.getElementById(`editable_${this.props.page.next_page}`)
+               nextEditableElId=`editable_u16c`;
+               nextEditableEl=document.getElementById(nextEditableElId)
+               
+             }else{
+               //break loop
+               spaceFound=true
+             }
           }
+          //     const El = document.getElementById(nextEditableElId);
+          //     console.log("next id",nextEditableElId)
+          //     console.log("el",El)
+          // // console.log("FULL LENGTH",nextEditableEl.lastChild.clientHeight+nextEditableEl.lastChild.offsetTop,El.clientHeight)
+          // if(nextEditableEl.lastChild.clientHeight+nextEditableEl.lastChild.offsetTop>El.clientHeight){
+          //   console.log("exceeded");
+          //   currentEditableElId=`editable_${this.props.page.next_page}`;
+          //   nextEditableElId=`editable_u16c`;
+          //   currentPageEl=document.getElementById(`editable_${this.props.page.next_page}`)
+          //   nextEditableEl=document.getElementById(nextEditableElId)
+
+          // }else{
+          //   console.log("not exceeded");
+          //   spaceFound=true;
+          //   console.log("breaked");
+          // }
+        // }
         }
-      }
+      // }
+      i++;
+      }//while end
     }
 
     this.previousCaretPosition = this.currentCaretPosition
+    
+  
     
   }
 
@@ -228,7 +303,7 @@ export default class ContentEditable extends Component {
         } : innerRef || this.el,
         onClick: this.emitKeyup,
         onInput: this.emitKeyup,
-        onKeyDown: this.emitKeyup,
+        // onKeyDown: this.emitKeyup,
         contentEditable: !this.props.disabled,
         dangerouslySetInnerHTML: { __html: html },
         style
