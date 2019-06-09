@@ -167,8 +167,15 @@ export default class ContentEditable extends Component {
     if(this.currentCaretPosition !== this.previousCaretPosition ) {
       let i=0;
       let spaceFound = false;
+      let selection = window.getSelection()
+      let enteredTriggeredLoc=selection.anchorNode;
+      let enteredTriggeredLast=nextEditableElfirstChild
+      // console.log("entered",enteredTriggeredLoc)
+      // this.moveFocus(currentPageEl.lastElementChild, nextEditableEl.lastElementChild.innerHTML)
+      
+
       while (i<4 && !spaceFound){
-        console.log(currentPageEl,nextEditableEl)//page elements is changing on overflow when entered from between
+        // console.log(currentPageEl,nextEditableEl)//page elements is changing on overflow when entered from between
         console.log("while",i)
       const currentPageElHeight = currentPageEl.clientHeight
 
@@ -209,6 +216,7 @@ export default class ContentEditable extends Component {
               if(nextEditableElfirstChild.innerHTML === "<br>" && nextEditableEl.childElementCount === 1) {
                 const div = document.createElement("div");
                 const textNode = document.createTextNode(nextPageText);
+                console.log("next",nextPageText)
                 div.appendChild(textNode)
                 nextEditableEl.replaceChild(div, nextEditableElfirstChild)
               } else {
@@ -235,8 +243,23 @@ export default class ContentEditable extends Component {
               if(nextEditableEl.lastElementChild.offsetTop+nextEditableEl.lastElementChild.clientHeight > nextEditableEl.clientHeight){
                console.log("entered from end,space not found")
                console.log("pipeline logic,when moved from end")
+
+               currentPageEl=document.getElementById(`editable_${this.props.page.next_page}`)
+               currentEditableElId=`editable_${this.props.page.next_page}`
+               nextEditableElId=`editable_u16c`;
+               nextEditableEl=document.getElementById(nextEditableElId)
+
+               this.moveFocus(nextEditableEl.lastElementChild,1)
+               selection=window.getSelection()
+               if(selection.anchorNode.offsetTop === undefined) {
+                  this.currentCaretPosition = selection.anchorNode.parentNode ? selection.anchorNode.parentNode.offsetTop + selection.anchorNode.parentNode.offsetHeight: 0
+                } else {
+                  this.currentCaretPosition = selection.anchorNode ? selection.anchorNode.offsetTop + selection.anchorNode.offsetHeight: 0
+                }
+
               }else{
                //break loop
+               this.moveFocus(enteredTriggeredLast,0)
                spaceFound=true
               }
               
@@ -253,12 +276,25 @@ export default class ContentEditable extends Component {
                console.log("pipeline logic when moved from between")
                console.log("entered from between,space not found")
                currentPageEl=document.getElementById(`editable_${this.props.page.next_page}`)
+               currentEditableElId=`editable_${this.props.page.next_page}`
                nextEditableElId=`editable_u16c`;
                nextEditableEl=document.getElementById(nextEditableElId)
+
+               this.moveFocus(nextEditableEl.lastElementChild,1)
+               selection=window.getSelection()
+               if(selection.anchorNode.offsetTop === undefined) {
+                  this.currentCaretPosition = selection.anchorNode.parentNode ? selection.anchorNode.parentNode.offsetTop + selection.anchorNode.parentNode.offsetHeight: 0
+                } else {
+                  this.currentCaretPosition = selection.anchorNode ? selection.anchorNode.offsetTop + selection.anchorNode.offsetHeight: 0
+                }
+
                
              }else{
                //break loop
+              //  console.log("asasfzsf",enteredTriggeredLoc)
+               this.moveFocus(enteredTriggeredLoc,0)
                spaceFound=true
+               
              }
           }
           //     const El = document.getElementById(nextEditableElId);
@@ -278,10 +314,16 @@ export default class ContentEditable extends Component {
           //   console.log("breaked");
           // }
         // }
+        }else{
+          spaceFound=true;
         }
+        
       // }
       i++;
       }//while end
+      
+      // this.moveFocus(enteredTriggeredLoc,enteredTriggeredLoc.length)
+
     }
 
     this.previousCaretPosition = this.currentCaretPosition
@@ -303,7 +345,7 @@ export default class ContentEditable extends Component {
         } : innerRef || this.el,
         onClick: this.emitKeyup,
         onInput: this.emitKeyup,
-        // onKeyDown: this.emitKeyup,
+        onKeyDown: this.emitKeyup,
         contentEditable: !this.props.disabled,
         dangerouslySetInnerHTML: { __html: html },
         style
