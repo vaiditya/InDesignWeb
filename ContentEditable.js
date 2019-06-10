@@ -1,5 +1,7 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
+import metadata from "./metadata";
+
 
 export class Caret {
     /**
@@ -49,6 +51,10 @@ function normalizeHtml(str) {
 }
 
 export default class ContentEditable extends Component {
+  constructor(props){
+    super(props);
+    Object.values(metadata).map((element)=> element.pages.map((mapElement)=>this.allPages.push(mapElement)))
+  }
   static propTypes = {
     html: PropTypes.string,
     onChange: PropTypes.func,
@@ -79,6 +85,8 @@ export default class ContentEditable extends Component {
     sel.removeAllRanges();
     sel.addRange(range);
   }
+  allPages=[]
+  nextPageDetails=null
 
  
   emitKeyup = (e) => {
@@ -90,11 +98,6 @@ export default class ContentEditable extends Component {
     let currentPageEl=this.getEl();
    
     let nextEditableEl = document.getElementById(nextEditableElId)
-    
-    
-    
-      // console.log(nextEditableEl)
-      // console.log(nextEditableEl.clientHeight)
     if (!currentPageEl) return;
 
     const selection = window.getSelection();
@@ -170,12 +173,9 @@ export default class ContentEditable extends Component {
       let selection = window.getSelection()
       let enteredTriggeredLoc=selection.anchorNode;
       let enteredTriggeredLast=nextEditableElfirstChild
-      // console.log("entered",enteredTriggeredLoc)
-      // this.moveFocus(currentPageEl.lastElementChild, nextEditableEl.lastElementChild.innerHTML)
       
 
       while (i<4 && !spaceFound){
-        // console.log(currentPageEl,nextEditableEl)//page elements is changing on overflow when entered from between
         console.log("while",i)
       const currentPageElHeight = currentPageEl.clientHeight
 
@@ -232,12 +232,8 @@ export default class ContentEditable extends Component {
 
             if(nextEditableElfirstChild.innerHTML === "<br>" && nextEditableEl.childElementCount === 1) {
               nextEditableEl.replaceChild(currentEditableElLastChild, nextEditableElfirstChild)
-              // console.log("asda",nextEditableEl.lastChild.offsetTop)
-              
             } else {
               nextEditableEl.insertBefore(currentEditableElLastChild, nextEditableElfirstChild)
-              // console.log("asdaqswdawd",nextEditableEl.lastChild.offsetTop+nextEditableEl.lastChild.clientHeight)
-              
               //pipeline logic
               
               if(nextEditableEl.lastElementChild.offsetTop+nextEditableEl.lastElementChild.clientHeight > nextEditableEl.clientHeight){
@@ -273,13 +269,13 @@ export default class ContentEditable extends Component {
              console.log("Move",nextEditableEl.lastElementChild.offsetTop+nextEditableEl.lastElementChild.clientHeight > nextEditableEl.clientHeight )
             //  console.log("pipeline logic")
              if(nextEditableEl.lastElementChild.offsetTop+nextEditableEl.lastElementChild.clientHeight > nextEditableEl.clientHeight){
-               console.log("pipeline logic when moved from between")
-               console.log("entered from between,space not found")
+              //  pipeline logic when moved from between
+              //  entered from between,space not found
                currentPageEl=document.getElementById(`editable_${this.props.page.next_page}`)
                currentEditableElId=`editable_${this.props.page.next_page}`
-               nextEditableElId=`editable_u16c`;
+               this.nextPageDetails=this.allPages.find((element)=>element.id===this.props.page.next_page)
+               nextEditableElId=`editable_${this.nextPageDetails.next_page}`
                nextEditableEl=document.getElementById(nextEditableElId)
-
                this.moveFocus(nextEditableEl.lastElementChild,1)
                selection=window.getSelection()
                if(selection.anchorNode.offsetTop === undefined) {
@@ -291,29 +287,11 @@ export default class ContentEditable extends Component {
                
              }else{
                //break loop
-              //  console.log("asasfzsf",enteredTriggeredLoc)
                this.moveFocus(enteredTriggeredLoc,0)
                spaceFound=true
                
              }
           }
-          //     const El = document.getElementById(nextEditableElId);
-          //     console.log("next id",nextEditableElId)
-          //     console.log("el",El)
-          // // console.log("FULL LENGTH",nextEditableEl.lastChild.clientHeight+nextEditableEl.lastChild.offsetTop,El.clientHeight)
-          // if(nextEditableEl.lastChild.clientHeight+nextEditableEl.lastChild.offsetTop>El.clientHeight){
-          //   console.log("exceeded");
-          //   currentEditableElId=`editable_${this.props.page.next_page}`;
-          //   nextEditableElId=`editable_u16c`;
-          //   currentPageEl=document.getElementById(`editable_${this.props.page.next_page}`)
-          //   nextEditableEl=document.getElementById(nextEditableElId)
-
-          // }else{
-          //   console.log("not exceeded");
-          //   spaceFound=true;
-          //   console.log("breaked");
-          // }
-        // }
         }else{
           spaceFound=true;
         }
@@ -321,9 +299,6 @@ export default class ContentEditable extends Component {
       // }
       i++;
       }//while end
-      
-      // this.moveFocus(enteredTriggeredLoc,enteredTriggeredLoc.length)
-
     }
 
     this.previousCaretPosition = this.currentCaretPosition
@@ -334,7 +309,9 @@ export default class ContentEditable extends Component {
 
   render() {
     const { tagName ='div', html = "", innerRef, page, style, ...props } = this.props;
-
+    
+    console.log()
+  //  console.log(allPages)
     return React.createElement(
       tagName,
       {
