@@ -100,7 +100,7 @@ export default {
       {
         "id": "u16c",
         "prev_page":"u16b",
-        "next_page":"u16c",
+        "next_page":null,
         "name": "3",
         "geometric_bound": [
           0.0,
