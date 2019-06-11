@@ -10,8 +10,8 @@ export default {
         "geometric_bound": [
           0.0,
           0.0,
-          600.0,
-          400.0
+          816,
+          528
         ],
         "item_transform": [
           1.0,
@@ -19,15 +19,15 @@ export default {
           0.0,
           1.0,
           0.0,
-          -300.0
+          -408.0
         ],
         "margins": {
           "ColumnCount": "1",
           "ColumnGutter": "30",
-          "Top": "30",
-          "Bottom": "30",
-          "Left": "30",
-          "Right": "30",
+          "Top": "81.6",
+          "Bottom": "81.6",
+          "Left": "72",
+          "Right": "72",
           "ColumnDirection": "Horizontal",
           "ColumnsPositions": "0 176"
         }
@@ -75,24 +75,24 @@ export default {
         "geometric_bound": [
           0.0,
           0.0,
-          600.0,
-          400.0
+          816,
+          528
         ],
         "item_transform": [
           1.0,
           0.0,
           0.0,
           1.0,
-          -400.0,
-          -300.0
+          -528.0,
+          -408.0
         ],
         "margins": {
           "ColumnCount": "1",
           "ColumnGutter": "30",
-          "Top": "30",
-          "Bottom": "30",
-          "Left": "30",
-          "Right": "30",
+          "Top": "81.6",
+          "Bottom": "81.6",
+          "Left": "72",
+          "Right": "72",
           "ColumnDirection": "Horizontal",
           "ColumnsPositions": "0 176"
         }
@@ -105,8 +105,8 @@ export default {
         "geometric_bound": [
           0.0,
           0.0,
-          600.0,
-          400.0
+          816.0,
+          528.0
         ],
         "item_transform": [
           1.0,
@@ -114,15 +114,15 @@ export default {
           0.0,
           1.0,
           0,
-          -300.0
+          -408.0
         ],
         "margins": {
           "ColumnCount": "1",
           "ColumnGutter": "30",
-          "Top": "30",
-          "Bottom": "30",
-          "Left": "30",
-          "Right": "30",
+          "Top": "81.6",
+          "Bottom": "81.6",
+          "Left": "72",
+          "Right": "72",
           "ColumnDirection": "Horizontal",
           "ColumnsPositions": "0 176"
         }
