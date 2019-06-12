@@ -111,7 +111,7 @@ export default class ContentEditable extends Component {
     } else {
       this.currentCaretPosition = selection.anchorNode ? selection.anchorNode.offsetTop + selection.anchorNode.offsetHeight: 0
     }
-    console.log(this.currentCaretPosition)
+
     if(e.keyCode === 8) {
       if(selection.anchorNode.offsetTop !== undefined && selection.anchorNode.offsetTop === 0) {
         e.preventDefault();
@@ -397,21 +397,7 @@ export default class ContentEditable extends Component {
         onInput: this.emitKeyup,
         onKeyDown: this.emitKeyup,
         contentEditable: !this.props.disabled,
-        dangerouslySetInnerHTML: { __html: this.props.page.prev_page===null ? `<span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>What is Lorem Ipsum?</span> <br />
-  <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>Lorem Ipsum is simply dummy text of the printing and 
-    typesetting industry. Lorem Ipsum has been the industry’s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type 
-    specimen book. It has survived not only five centuries, but also the leap into </span> 
-    <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>electronic</span> 
-    <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '> typesetting, remaining essentially unchanged. 
-      It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including version</span> 
-      <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>s</span> 
-      <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '> of Lorem Ipsum.</span> <br /><br /><br /><br />
-      <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>Why do we use it?</span> <br />
-      <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>It is a long established fact that a reader will be distracted by 
-        the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using ‘Content here, content here’,
-         making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for ‘lorem ipsum’ will uncover many web sites still in </span> <br /><br />
-         <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>their infancy. Various versions have evolved over the BMW</span> <br />
-         <span style='font-weight: normal; color:rgb(0, 0, 0); font-family:Montserrat; line-height: 14.4pt; font-size: 12pt; '>bmw  years, sometimes by accident,sometimes on purpose bm   (injected humour and the like).</span> ` : html},
+        dangerouslySetInnerHTML: { __html: html },
         style
       },
     this.props.children);
